@@ -32,6 +32,8 @@ yarn-error.log*
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
 
+.mvn
+
 # Gradle
 .idea/**/gradle.xml
 .idea/**/libraries
