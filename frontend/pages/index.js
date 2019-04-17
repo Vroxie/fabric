@@ -12,7 +12,9 @@ export default class Fabric extends React.Component {
             workerage:0,
             shiftStartHour:0,
             shiftEndHour:0,
-            shiftdate: "yyyy-MM-dd"
+            shiftdate: "yyyy-MM-dd",
+            workerid:"Id of worker",
+            shiftid:"Id of shift",
         };
     }
 
@@ -153,6 +155,7 @@ export default class Fabric extends React.Component {
                 <tbody>
                     {
                         this.props.shifts.map(shift =>(
+                            shift.available ? (
                             <tr>
                                 <td>{shift.workingHours}</td>
                                 <td>{shift.datetime}</td>
@@ -160,6 +163,7 @@ export default class Fabric extends React.Component {
                                         this.deleteShift(this.props.shifts.indexOf(shift))
                                     }}>-</Button>
                             </tr>
+                            ) : (<div></div>)
                         ))
                     }
                 </tbody>
@@ -247,16 +251,48 @@ export default class Fabric extends React.Component {
     }
 
     addWorkerinShift(){
+        if(this.state.workerid === 'Id of worker' || this.state.shiftid === 'Id of shift'){
 
+        }
+        else{
+            if(this.props.workers[this.state.workerid] && this.props.shifts[this.state.shiftid] && this.props.shifts[this.state.shiftid].available){
+            let wid = this.state.workerid;
+            let sid = this.state.shiftid;
+            let url = 'http://localhost:8080/addworkinshift?workerId=' + wid + '&shiftId=' + sid;
+            fetch(url);
+            this.forceUpdate()
+            }
+            else{
+                console.log("Not valid ids")
+            }
+        }
+    }
+
+    handleworkerid(event){
+        this.setState({workerid:event.target.value})
+    }
+
+    handleshiftid(event){
+        this.setState({shiftid:event.target.value})
     }
 
     workersinShift(){
         return(
             <div>
                 <h1>Workers In Shift</h1>
+                <form>
+                <label>Worker:
+                    <input type="text" name="worker" value={this.state.workerid} onChange={this.handleworkerid.bind(this)}></input>
+                </label>
+                <p></p>
+                <label>Shift:
+                    <input type="text" name="shift" value={this.state.shiftid} onChange={this.handleshiftid.bind(this)}></input>
+                </label>
+                <p></p>
                 <Button type='submit' onClick={() => {
                                         this.addWorkerinShift()
                                     }}>+</Button>
+            </form>
                 <Table className='tablis' striped bordered hover style={{
                     tableLayout:"fixed",
                     fontFamily:"Helvetica"
@@ -289,6 +325,7 @@ export default class Fabric extends React.Component {
 
 
     render(){
+    console.log(this.props.shifts)
     return (<div>
     {this.workers()}
     {this.shifts()}
