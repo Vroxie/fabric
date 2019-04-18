@@ -93,13 +93,15 @@ export default class Fabric extends React.Component {
                 <tbody>
                     {
                         this.props.workers.map(worker =>(
-                            <tr>
+                            <tr key={worker.id}>
                                 <td>{worker.id}</td>
                                 <td>{worker.name}</td>
                                 <td>{worker.age}</td>
+                                <td>
                                 <Button type='submit' onClick={() => {
                                         this.deleteWorker(worker.id)
                                     }}>-</Button>
+                                </td>
                             </tr>
                         ))
                     }
@@ -148,6 +150,7 @@ export default class Fabric extends React.Component {
             }}>
                 <thead>
                     <tr>
+                    <th>Id:</th>
                     <th>Working Hours</th>
                     <th>Date</th>
                     </tr>
@@ -156,14 +159,17 @@ export default class Fabric extends React.Component {
                     {
                         this.props.shifts.map(shift =>(
                             shift.available ? (
-                            <tr>
+                            <tr key={this.props.shifts.indexOf(shift)}>
+                                <td>{this.props.shifts.indexOf(shift)}</td>
                                 <td>{shift.workingHours}</td>
                                 <td>{shift.datetime}</td>
+                                <td>
                                 <Button type='submit' onClick={() => {
                                         this.deleteShift(this.props.shifts.indexOf(shift))
                                     }}>-</Button>
+                                </td>
                             </tr>
-                            ) : (<div></div>)
+                            ) : (null)
                         ))
                     }
                 </tbody>
@@ -212,8 +218,17 @@ export default class Fabric extends React.Component {
     }
 
     deleteWorker(id){
+        let bool = true;
+        for(let i = 0;i<this.props.workersInShift;i++){
+            if(this.props.workersInShift[i].workerid === id){
+                bool = false;
+            }
+        }
+        if(bool){
         let url = 'http://localhost:8080/del?type=workers&id=' + id;
         fetch(url);
+        }
+
     }
 
     deleteShift(id){
@@ -251,22 +266,33 @@ export default class Fabric extends React.Component {
     }
 
     addWorkerinShift(){
-        if(this.state.workerid === 'Id of worker' || this.state.shiftid === 'Id of shift'){
-
+        if(this.state.workerid === "Id of worker" || this.state.shiftid === "Id of shift"){
         }
         else{
-            if(this.props.workers[this.state.workerid] && this.props.shifts[this.state.shiftid] && this.props.shifts[this.state.shiftid].available){
+            if(this.props.shifts[this.state.shiftid] && this.props.shifts[this.state.shiftid].available){
             let wid = this.state.workerid;
             let sid = this.state.shiftid;
             let url = 'http://localhost:8080/addworkinshift?workerId=' + wid + '&shiftId=' + sid;
+            console.log("VALID")
             fetch(url);
-            this.forceUpdate()
             }
             else{
                 console.log("Not valid ids")
             }
         }
     }
+
+    workerexists(id){
+        let bool = false;
+        for(let i = 0; i < this.props.workers.length;i++){
+            if(this.props.workers[i].id === id){
+                bool = true;
+            }
+        }
+
+        return bool
+    }
+
 
     handleworkerid(event){
         this.setState({workerid:event.target.value})
@@ -307,13 +333,15 @@ export default class Fabric extends React.Component {
                     <tbody>
                         {
                             this.props.workersInShift.map(workshift =>(
-                                <tr>
+                                <tr key={this.props.workersInShift.indexOf(workshift)}>
                                     <td>{this.getWorkerName(workshift.workerId)}</td>
                                     <td>{this.getWorkingHours(workshift.shiftId)}</td>
                                     <td>{this.getWorkDate(workshift.shiftId)}</td>
+                                    <td>
                                     <Button type='submit' onClick={() => {
                                         this.deleteWorkerInShift(this.props.workersInShift.indexOf(workshift))
                                     }}>-</Button>
+                                    </td>
                                 </tr>
                             ))
                         }
@@ -325,7 +353,6 @@ export default class Fabric extends React.Component {
 
 
     render(){
-    console.log(this.props.shifts)
     return (<div>
     {this.workers()}
     {this.shifts()}

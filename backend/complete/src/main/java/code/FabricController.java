@@ -5,7 +5,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Random;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -48,20 +48,30 @@ public class FabricController {
         if(type.equals("workinshift")){
             REVIEW_TYPE = new TypeToken<List<WorkerInShift>>() {
             }.getType();
+            Type REVIEW_TYPEs = new TypeToken<List<Shift>>() {
+            }.getType();
             JsonReader jsonReader = new JsonReader(new FileReader("workersinShift.json"));
+            JsonReader jsonReaderShift = new JsonReader(new FileReader("shifts.json"));
+            List<Shift> shifts = gson.fromJson(jsonReaderShift,REVIEW_TYPEs);
             ws = gson.fromJson(jsonReader,REVIEW_TYPE);
+            int shiftid = ws.get(id).getShiftId();
             ws.remove(id);
+            shifts.get(shiftid).setUnBusy();
             data = gson.toJson(ws);
+            String shiftdata = gson.toJson(shifts);
             FileWriter fw = new FileWriter("workersinShift.json");
+            FileWriter shiftfw = new FileWriter("shifts.json");
             fw.write(data);
             fw.close();
+            shiftfw.write(shiftdata);
+            shiftfw.close();
         }
         else if(type.equals("workers")){
              REVIEW_TYPE = new TypeToken<List<Worker>>() {
             }.getType();
             JsonReader jsonReader = new JsonReader(new FileReader("fabric.json"));
             w = gson.fromJson(jsonReader,REVIEW_TYPE);
-            w.remove(id);
+            w.remove(findWorker(w,id));
             data = gson.toJson(w);
             FileWriter fw = new FileWriter("fabric.json");
             fw.write(data);
@@ -81,6 +91,18 @@ public class FabricController {
 
     }
 
+    public Worker findWorker(List<Worker> workers,int id){
+        Worker worker = null;
+        for(Worker w : workers){
+            if(w.getId() == id){
+                worker = w;
+            }
+        }
+
+        return worker;
+    }
+
+
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/addworker")
     public void addWorker(@RequestParam String name, @RequestParam int age) throws IOException {
@@ -88,12 +110,29 @@ public class FabricController {
         }.getType();
         JsonReader jsonReader = new JsonReader(new FileReader("fabric.json"));
         List<Worker> w = gson.fromJson(jsonReader,REVIEW_TYPE);
-        Worker nWorker = new Worker(w.size(),name,age);
+        Worker nWorker = new Worker(genId(w),name,age);
         w.add(nWorker);
         String data = gson.toJson(w);
         FileWriter fw = new FileWriter("fabric.json");
         fw.write(data);
         fw.close();
+    }
+
+
+    public int genId(List<Worker> workers){
+        Random rand = new Random();
+        boolean isUnique = false;
+        int id = 0;
+        while (!isUnique){
+            id = rand.nextInt(100);
+            isUnique = true;
+            for(Worker w : workers){
+                if(w.getId() == id){
+                    isUnique = false;
+                }
+            }
+        }
+        return id;
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
@@ -125,7 +164,7 @@ public class FabricController {
         List<WorkerInShift> ws = gson.fromJson(jsonReaderWS,REVIEW_TYPE);
         List<Shift> s = gson.fromJson(jsonReaderS,REVIEW_TYPEs);
         ws.add(workerInShift);
-        s.remove(shiftId);
+        s.get(shiftId).setBusy();
         String data = gson.toJson(ws);
         String sData = gson.toJson(s);
         FileWriter fw = new FileWriter("workersinShift.json");
