@@ -2,6 +2,7 @@ import React from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 const fetch = require("isomorphic-fetch");
+import Link from 'next/link';
 
 export default class Fabric extends React.Component {
 
@@ -102,6 +103,9 @@ export default class Fabric extends React.Component {
                                         this.deleteWorker(worker.id)
                                     }}>-</Button>
                                 </td>
+                                <Link as={`/edit/?table=workers&id=${worker.id}`} href={`/edit/?table=workers&id=${worker.id}`}>
+                                    <Button type='submit'>Edit</Button>
+                                </Link>
                             </tr>
                         ))
                     }
@@ -167,6 +171,12 @@ export default class Fabric extends React.Component {
                                 <Button type='submit' onClick={() => {
                                         this.deleteShift(this.props.shifts.indexOf(shift))
                                     }}>-</Button>
+                                </td>
+                                <td>
+                                <Link as={`/edit/?table=shifts&id=${this.props.shifts.indexOf(shift)}`} 
+                                    href={`/edit/?table=shifts&id=${this.props.shifts.indexOf(shift)}`}>
+                                    <Button type='submit'>Edit</Button>
+                                </Link>
                                 </td>
                             </tr>
                             ) : (null)
@@ -353,10 +363,33 @@ export default class Fabric extends React.Component {
 
 
     render(){
-    return (<div>
-    {this.workers()}
-    {this.shifts()}
-    {this.workersinShift()}
+    return (<div className='container'>
+    <style jsx>{`
+
+        .container{
+            justify-content:center;
+            align-items:center;
+        }
+
+        .workercss{
+        }
+
+        .shiftcss{
+        }
+
+        .workerinshift{
+        }
+    
+    `}</style>
+    <div className='workercss'>
+        {this.workers()}
+    </div>
+    <div className='shiftcss'>
+        {this.shifts()}
+    </div>
+    <div className='workerinshift'>
+        {this.workersinShift()}
+    </div>
     </div>)
     }
 }
