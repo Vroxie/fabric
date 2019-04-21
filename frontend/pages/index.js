@@ -218,7 +218,6 @@ export default class Fabric extends React.Component {
 
     deleteWorkerInShift(id){
         let url = 'http://localhost:8080/del?type=workinshift&id=' + id;
-        console.log(url)
         fetch(url),{
             method:"GET",
             headers:{

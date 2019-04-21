@@ -7,8 +7,6 @@ export default class Edit extends React.Component {
         this.state = {
             workername:this.getInfo('name'),
             workerage:this.getInfo('age'),
-            shiftworkhours:this.getShiftInfo('workhours'),
-            shiftdate:this.getShiftInfo('date')
         };
     }
 
@@ -78,11 +76,12 @@ export default class Edit extends React.Component {
     }
 
     editWorker(){
-
+        let url = 'http://localhost:8080/editworker?id=' + this.props.id + '&name=' + this.state.workername + '&age=' + this.state.workerage;
+        fetch(url)
     }
 
     editShift(){
-
+      
     }
 
 
@@ -133,12 +132,14 @@ export default class Edit extends React.Component {
                 </div>
             )
         }
-        return(
-            <div>
-                <h1>EDIT Shift</h1>
-                {this.shifts()}
+        else{
+            return(
+                <div>
+                    <h1>EDIT Shift</h1>
+                    {this.shifts()}
 
-            </div>
-        )
+                </div>
+            )
+        }
     }
 }

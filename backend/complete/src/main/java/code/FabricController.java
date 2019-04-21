@@ -102,6 +102,24 @@ public class FabricController {
         return worker;
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("/editworker")
+    public void editWorker(@RequestParam int id, @RequestParam String name, @RequestParam int age) throws IOException {
+        Type REVIEW_TYPE = new TypeToken<List<Worker>>() {
+        }.getType();
+        JsonReader jsonReader = new JsonReader(new FileReader("fabric.json"));
+        List<Worker> w = gson.fromJson(jsonReader,REVIEW_TYPE);
+        Worker worker = findWorker(w,id);
+        int index = w.indexOf(worker);
+        w.get(index).setName(name);
+        w.get(index).setAge(age);
+        String data = gson.toJson(w);
+        FileWriter fw = new FileWriter("fabric.json");
+        fw.write(data);
+        fw.close();
+
+    }
+
 
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/addworker")

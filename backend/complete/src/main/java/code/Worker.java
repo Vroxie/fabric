@@ -23,6 +23,14 @@ public class Worker {
         return name;
     }
 
+    public void setName(String newName){
+        name = newName;
+    }
+
+    public void setAge(int newAge){
+        age = newAge;
+    }
+
     public String toString(){
         return "Id: " +  id + " Name: " + name + " age: " + age;
     }
