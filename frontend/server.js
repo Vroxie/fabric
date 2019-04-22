@@ -9,7 +9,7 @@ app.prepare()
   .then(() => {
     const server = express();
 
-    server.get(`/edit/?:table&:id`,(req,res) => {
+    server.get(`/edit?:table&:id`,(req,res) => {
       const actualPage = '/edit';
       const queryParams = {
         table:req.params.table,

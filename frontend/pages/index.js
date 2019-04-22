@@ -103,7 +103,7 @@ export default class Fabric extends React.Component {
                                         this.deleteWorker(worker.id)
                                     }}>-</Button>
                                 </td>
-                                <Link as={`/edit/?table=workers&id=${worker.id}`} href={`/edit/?table=workers&id=${worker.id}`}>
+                                <Link as={`/edit?table=workers&id=${worker.id}`} href={`/edit?table=workers&id=${worker.id}`}>
                                     <Button type='submit'>Edit</Button>
                                 </Link>
                             </tr>
@@ -173,8 +173,8 @@ export default class Fabric extends React.Component {
                                     }}>-</Button>
                                 </td>
                                 <td>
-                                <Link as={`/edit/?table=shifts&id=${this.props.shifts.indexOf(shift)}`} 
-                                    href={`/edit/?table=shifts&id=${this.props.shifts.indexOf(shift)}`}>
+                                <Link as={`/edit?table=shifts&id=${this.props.shifts.indexOf(shift)}`} 
+                                    href={`/edit?table=shifts&id=${this.props.shifts.indexOf(shift)}`}>
                                     <Button type='submit'>Edit</Button>
                                 </Link>
                                 </td>
@@ -224,6 +224,7 @@ export default class Fabric extends React.Component {
                 mode:'cors',
             }
         };
+        this.forceUpdate()
     }
 
     deleteWorker(id){
@@ -236,6 +237,7 @@ export default class Fabric extends React.Component {
         if(bool){
         let url = 'http://localhost:8080/del?type=workers&id=' + id;
         fetch(url);
+        this.forceUpdate()
         }
 
     }
@@ -243,6 +245,7 @@ export default class Fabric extends React.Component {
     deleteShift(id){
         let url = 'http://localhost:8080/del?type=shifts&id=' + id;
         fetch(url);
+        this.forceUpdate()
     }
 
     addWorker(){
