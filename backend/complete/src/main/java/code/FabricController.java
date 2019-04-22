@@ -89,7 +89,7 @@ public class FabricController {
             fw.close();
         }
         else if(type.equals("shifts")){
-            REVIEW_TYPE  = new TypeToken<List<WorkerInShift>>() {
+            REVIEW_TYPE  = new TypeToken<List<Shift>>() {
             }.getType();
             JsonReader jsonReader = new JsonReader(new FileReader("shifts.json"));
             s = gson.fromJson(jsonReader,REVIEW_TYPE);
