@@ -7,6 +7,9 @@ export default class Edit extends React.Component {
         this.state = {
             workername:this.getInfo('name'),
             workerage:this.getInfo('age'),
+            shiftStartHour:this.getHours()[0],
+            shiftEndHour:this.getHours()[1],
+            shiftdate:this.getDate(),
         };
     }
 
@@ -52,10 +55,14 @@ export default class Edit extends React.Component {
 
     getShiftInfo(info){
         if(info === 'workhours'){
-            return this.props.shifts[this.props.id].workingHours
+            if(this.props.shifts[this.props.id]){
+                return this.props.shifts[this.props.id].workingHours
+            }
         }
         else{
-            return this.props.shifts[this.props.id].datetime
+            if(this.props.shifts[this.props.id]){
+                return this.props.shifts[this.props.id].datetime
+            }
         }
     }
 
@@ -67,8 +74,13 @@ export default class Edit extends React.Component {
         this.setState({workerage:event.target.value})
     }
 
-    handleshiftworkerhours(event){
-        this.setState({shiftworkhours:event.target.value})
+    handleshiftStartHour(event){
+        this.setState({shiftStartHour:event.target.value})
+    }
+
+
+    handleshiftEndHour(event){
+        this.setState({shiftEndHour:event.target.value})
     }
 
     handleShiftDate(event){
@@ -81,7 +93,12 @@ export default class Edit extends React.Component {
     }
 
     editShift(){
-      
+        let date = new Date(this.state.shiftdate);
+        let datesec = date.getTime();
+        let startHour = this.state.shiftStartHour;
+        let endHour = this.state.shiftEndHour;
+        let url = 'http://localhost:8080/editshift?id=' + this.props.id + '&startHour=' + startHour + '&endHour=' + endHour + '&date=' + datesec;
+        fetch(url);
     }
 
 
@@ -103,11 +120,33 @@ export default class Edit extends React.Component {
         )
     }
 
+
+    getHours(){
+        if(this.getShiftInfo('workhours')){
+            let hours = this.getShiftInfo('workhours').split('-');
+            return hours
+        }
+        let hours1 = [0,0]
+        return hours1
+    }
+
+    getDate(){
+        let date = new Date(this.getShiftInfo('date'));
+        let string = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
+        return string
+
+    }
+
+
     shifts(){
         return(
             <form>
-                <label>Work Hours:
-                    <input type="text" name="name" value={this.state.shiftworkhours} onChange={this.handleshiftworkerhours.bind(this)}/>
+                <label>Start Hour:
+                    <input type="text" name="name" value={this.state.shiftStartHour} onChange={this.handleshiftStartHour.bind(this)}/>
+                </label>
+                <p></p>
+                <label>End Hour:
+                    <input type="text" name="name" value={this.state.shiftEndHour} onChange={this.handleshiftEndHour.bind(this)}/>
                 </label>
                 <p></p>
                 <label>Date:

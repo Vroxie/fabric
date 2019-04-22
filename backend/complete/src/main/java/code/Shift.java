@@ -36,6 +36,18 @@ public class Shift {
         isAvailable = true;
     }
 
+    public void setDate(Date d){
+        datetime = d;
+    }
+
+    public void setStartHour(int hour){
+        startHour = hour;
+    }
+
+    public void setEndHour(int hour){
+        endHour = hour;
+    }
+
     public String toString(){
         SimpleDateFormat ft = new SimpleDateFormat("E yyyy.MM.dd");
         return "Working hours: " + getWorkingHours() + " date: "  + ft.format(datetime);

@@ -170,6 +170,25 @@ public class FabricController {
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("/editshift")
+    public void editShift(@RequestParam int id,@RequestParam int startHour,@RequestParam int endHour,@RequestParam long date) throws IOException {
+        Type REVIEW_TYPE = new TypeToken<List<Shift>>() {
+        }.getType();
+        JsonReader jsonReader = new JsonReader(new FileReader("shifts.json"));
+        Date dat = new Date(date);
+        List<Shift> s = gson.fromJson(jsonReader,REVIEW_TYPE);
+        s.get(id).setStartHour(startHour);
+        s.get(id).setEndHour(endHour);
+        s.get(id).setDate(dat);
+        String data = gson.toJson(s);
+        FileWriter fw = new FileWriter("shifts.json");
+        fw.write(data);
+        fw.close();
+    }
+
+
+
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("addworkinshift")
     public void addworkInShift(@RequestParam int workerId, @RequestParam int shiftId) throws IOException {
         Type REVIEW_TYPE = new TypeToken<List<WorkerInShift>>(){
