@@ -50,21 +50,32 @@ public class FabricController {
             }.getType();
             Type REVIEW_TYPEs = new TypeToken<List<Shift>>() {
             }.getType();
+            Type REVIEW_TYPEw = new TypeToken<List<Worker>>() {
+            }.getType();
             JsonReader jsonReader = new JsonReader(new FileReader("workersinShift.json"));
             JsonReader jsonReaderShift = new JsonReader(new FileReader("shifts.json"));
+            JsonReader jsonReaderWork = new JsonReader(new FileReader("fabric.json"));
             List<Shift> shifts = gson.fromJson(jsonReaderShift,REVIEW_TYPEs);
+            List<Worker> workers = gson.fromJson(jsonReaderWork,REVIEW_TYPEw);
             ws = gson.fromJson(jsonReader,REVIEW_TYPE);
             int shiftid = ws.get(id).getShiftId();
+            int workerid = ws.get(id).getWorkerId();
             ws.remove(id);
             shifts.get(shiftid).setUnBusy();
+            int workindex = workers.indexOf(findWorker(workers,workerid));
+            workers.get(workindex).setUnbusy();
             data = gson.toJson(ws);
             String shiftdata = gson.toJson(shifts);
+            String workdata = gson.toJson(workers);
             FileWriter fw = new FileWriter("workersinShift.json");
             FileWriter shiftfw = new FileWriter("shifts.json");
+            FileWriter workerfw = new FileWriter("fabric.json");
             fw.write(data);
             fw.close();
             shiftfw.write(shiftdata);
             shiftfw.close();
+            workerfw.write(workdata);
+            workerfw.close();
         }
         else if(type.equals("workers")){
              REVIEW_TYPE = new TypeToken<List<Worker>>() {
@@ -195,21 +206,31 @@ public class FabricController {
         }.getType();
         Type REVIEW_TYPEs = new TypeToken<List<Shift>>(){
         }.getType();
+        Type REVIEW_TYPEw = new TypeToken<List<Worker>>() {
+        }.getType();
         JsonReader jsonReaderWS = new JsonReader(new FileReader("workersinShift.json"));
         JsonReader jsonReaderS = new JsonReader(new FileReader("shifts.json"));
+        JsonReader jsonReaderW = new JsonReader(new FileReader("fabric.json"));
         WorkerInShift workerInShift= new WorkerInShift(workerId,shiftId);
         List<WorkerInShift> ws = gson.fromJson(jsonReaderWS,REVIEW_TYPE);
         List<Shift> s = gson.fromJson(jsonReaderS,REVIEW_TYPEs);
+        List<Worker> w = gson.fromJson(jsonReaderW,REVIEW_TYPEw);
         ws.add(workerInShift);
         s.get(shiftId).setBusy();
+        int workindex = w.indexOf(findWorker(w,workerId));
+        w.get(workindex).setBusy();
         String data = gson.toJson(ws);
         String sData = gson.toJson(s);
+        String wData = gson.toJson(w);
         FileWriter fw = new FileWriter("workersinShift.json");
         FileWriter fws = new FileWriter("shifts.json");
+        FileWriter fwworker = new FileWriter("fabric.json");
         fw.write(data);
         fw.close();
         fws.write(sData);
         fws.close();
+        fwworker.write(wData);
+        fwworker.close();
     }
 
     @CrossOrigin(origins = "http://localhost:3000")

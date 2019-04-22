@@ -94,6 +94,7 @@ export default class Fabric extends React.Component {
                 <tbody>
                     {
                         this.props.workers.map(worker =>(
+                            !worker.busy ? (
                             <tr key={worker.id}>
                                 <td>{worker.id}</td>
                                 <td>{worker.name}</td>
@@ -107,6 +108,7 @@ export default class Fabric extends React.Component {
                                     <Button type='submit'>Edit</Button>
                                 </Link>
                             </tr>
+                            ): (null)
                         ))
                     }
                 </tbody>
