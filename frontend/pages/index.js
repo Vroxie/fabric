@@ -238,7 +238,7 @@ export default class Fabric extends React.Component {
         }
         if(bool){
         let url = 'http://localhost:8080/del?type=workers&id=' + id;
-        fetch(url);
+        fetch(url)
         this.forceUpdate()
         }
 
@@ -287,8 +287,8 @@ export default class Fabric extends React.Component {
             let wid = this.state.workerid;
             let sid = this.state.shiftid;
             let url = 'http://localhost:8080/addworkinshift?workerId=' + wid + '&shiftId=' + sid;
-            console.log("VALID")
             fetch(url);
+            this.forceUpdate()
             }
             else{
                 console.log("Not valid ids")
