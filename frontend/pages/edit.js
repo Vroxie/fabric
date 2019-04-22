@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button';
+import Link from 'next/link';
 export default class Edit extends React.Component {
 
     constructor(props) {
@@ -113,9 +114,11 @@ export default class Edit extends React.Component {
                     <input type="text" name="age" value={this.state.workerage} onChange={this.handleWorkerAge.bind(this)}></input>
                 </label>
                 <p></p>
+                <Link href="/">
                 <Button type='submit' onClick={() => {
                                         this.editWorker()
                                     }}>Edit</Button>
+                </Link>
             </form>
         )
     }
@@ -153,9 +156,11 @@ export default class Edit extends React.Component {
                     <input type="text" name="age" value={this.state.shiftdate} onChange={this.handleShiftDate.bind(this)}></input>
                 </label>
                 <p></p>
+                <Link href="/">
                 <Button type='submit' onClick={() => {
                                         this.editShift()
                                     }}>Edit</Button>
+                </Link>
             </form>
         )
     }
@@ -167,7 +172,6 @@ export default class Edit extends React.Component {
                 <div>
                     <h1>EDIT Worker</h1>
                     {this.workers()}
-    
                 </div>
             )
         }
